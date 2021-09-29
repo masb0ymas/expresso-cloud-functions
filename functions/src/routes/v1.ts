@@ -5,4 +5,7 @@ const route = Express.Router()
 export default route
 
 require('@controllers/Auth/controller')
-require('@controllers/Role/controller')
+
+// Master
+require('@controllers/Master/Role/controller')
+require('@controllers/Master/Category/controller')
