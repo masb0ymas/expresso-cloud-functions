@@ -20,6 +20,16 @@ route.get('/', function indexRoute(req: Request, res: Response) {
   return res.status(200).json(httpResponse)
 })
 
+route.get('/health', function (req: Request, res: Response) {
+  const data = {
+    uptime: process.uptime(),
+    message: 'Ok',
+    date: new Date(),
+  }
+
+  res.status(200).json({ status: data })
+})
+
 route.get('/v1', function (req: Request, res: Response) {
   throw new ResponseError.Forbidden(
     `Forbidden, wrong access endpoint: ${req.url}`
@@ -27,5 +37,11 @@ route.get('/v1', function (req: Request, res: Response) {
 })
 
 route.use('/v1', v1Route)
+
+route.use('*', function (req: Request, res: Response) {
+  throw new ResponseError.NotFound(
+    `Sorry, HTTP resource you are looking for was not found.`
+  )
+})
 
 export default route
