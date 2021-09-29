@@ -22,7 +22,7 @@ interface DtoLogin {
   user: {
     uid: string
     fullName: any
-    Role: any
+    role: any
     email: string
     photoUrl: string | null
   }
@@ -65,7 +65,7 @@ class AuthService {
 
     await admin.auth().setCustomUserClaims(UserId, {
       name: formData.fullName,
-      Role: formData.Role,
+      role: formData.role,
     })
 
     if (validateUser.newPassword ?? validateUser.confirmNewPassword) {
@@ -102,7 +102,7 @@ class AuthService {
 
     await admin.auth().setCustomUserClaims(getUser.uid, {
       name: getUser.customClaims?.name,
-      Role: getUser.customClaims?.Role,
+      role: getUser.customClaims?.role,
     })
 
     // sign in user auth
@@ -120,7 +120,7 @@ class AuthService {
     const user = {
       uid: getUser.uid,
       fullName: getUser.customClaims?.name,
-      Role: getUser.customClaims?.Role,
+      role: getUser.customClaims?.role,
       email: formData.email,
       photoUrl: data.user.photoURL,
     }

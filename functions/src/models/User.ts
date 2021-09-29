@@ -5,12 +5,16 @@ interface UserEntity {
   isActive?: boolean | null
   isBlocked?: boolean | null
   picturePath?: string | null
-  Role: string
+  role: string
   createdAt: Date
   updatedAt: Date
 }
 
 export type UserAttributes = Omit<UserEntity, 'createdAt' | 'updatedAt'>
+
+export interface UserLoginAttributes {
+  uid: string
+}
 
 export type LoginAttributes = Pick<UserEntity, 'email'> & {
   password: string

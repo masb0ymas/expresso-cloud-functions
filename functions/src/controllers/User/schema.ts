@@ -18,7 +18,7 @@ const create = yup
     email: yup.string().email('invalid email').required('email is required'),
     phone: yup.string().nullable(),
     picturePath: yup.string().nullable(),
-    Role: yup.string().required('role is required'),
+    role: yup.string().required('role is required'),
     createdAt: yup.date().nullable(),
     updatedAt: yup.date().nullable(),
   })
