@@ -25,7 +25,8 @@ async function Authorization(
     if (err.code ?? err.code.startsWith('auth/')) {
       return res.status(400).json({
         code: 400,
-        message: err.message,
+        message: 'the login session has ended, please re-login',
+        original: err.message,
       })
     }
   }
