@@ -1,11 +1,13 @@
 import asyncHandler from '@expresso/helpers/asyncHandler'
 import HttpResponse from '@expresso/modules/Response/HttpResponse'
+import Authorization from '@middlewares/Authorization'
 import route from '@routes/v1'
 import { Request, Response } from 'express'
 import RoleService from './service'
 
 route.get(
   '/role',
+  Authorization,
   asyncHandler(async function findAll(req: Request, res: Response) {
     const data = await RoleService.findAll(req)
 
@@ -16,6 +18,7 @@ route.get(
 
 route.get(
   '/role/:id',
+  Authorization,
   asyncHandler(async function findById(req: Request, res: Response) {
     const { id } = req.getParams()
     const data = await RoleService.findById(id)
@@ -27,6 +30,7 @@ route.get(
 
 route.post(
   '/role',
+  Authorization,
   asyncHandler(async function created(req: Request, res: Response) {
     const formData = req.getBody()
 
@@ -39,6 +43,7 @@ route.post(
 
 route.put(
   '/role/:id',
+  Authorization,
   asyncHandler(async function updated(req: Request, res: Response) {
     const { id } = req.getParams()
     const formData = req.getBody()
@@ -52,6 +57,7 @@ route.put(
 
 route.delete(
   '/role/:id',
+  Authorization,
   asyncHandler(async function deleted(req: Request, res: Response) {
     const { id } = req.getParams()
 
