@@ -9,18 +9,14 @@ import { Request } from 'express'
 import roleSchema from './schema'
 
 class RoleService {
-  private readonly _collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
-
-  constructor() {
-    this._collection = dbAdmin.collection(RoleCollection)
-  }
+  private static readonly _collection = dbAdmin.collection(RoleCollection)
 
   /**
    *
    * @param req
    * @returns
    */
-  public async getAll(req: Request): Promise<DtoPaginate> {
+  public static async findAll(req: Request): Promise<DtoPaginate> {
     const reqQuery = req.getQuery()
     const ref = await useQuery(reqQuery, this._collection)
 
@@ -40,7 +36,7 @@ class RoleService {
    * @param id
    * @returns
    */
-  public async findById(id: string): Promise<any> {
+  public static async findById(id: string): Promise<any> {
     const snap = await this._collection.doc(id).get()
 
     if (!snap.exists) {
@@ -60,7 +56,7 @@ class RoleService {
    * @param formData
    * @returns
    */
-  public async created(formData: RoleAttributes): Promise<any> {
+  public static async created(formData: RoleAttributes): Promise<any> {
     const newFormData = {
       ...formData,
       createdAt: new Date(),
@@ -82,7 +78,10 @@ class RoleService {
    * @param formData
    * @returns
    */
-  public async updated(id: string, formData: RoleAttributes): Promise<any> {
+  public static async updated(
+    id: string,
+    formData: RoleAttributes
+  ): Promise<any> {
     const ref = this._collection.doc(id)
     const getOne = await this.findById(id)
 
@@ -107,9 +106,9 @@ class RoleService {
    *
    * @param id
    */
-  public async deleted(id: string): Promise<void> {
-    const getOne = await this.findById(id)
-    console.log({ getOne })
+  public static async deleted(id: string): Promise<void> {
+    const data = await this.findById(id)
+    console.log({ data })
 
     await this._collection.doc(id).delete()
   }
