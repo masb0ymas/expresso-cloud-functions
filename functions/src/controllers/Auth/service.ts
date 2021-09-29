@@ -17,7 +17,7 @@ interface DtoSignUp {
 
 interface DtoLogin {
   message: string
-  token: string
+  accessToken: string
   refreshToken: string
   user: {
     uid: string
@@ -113,7 +113,7 @@ class AuthService {
       formData.password
     )
 
-    const token = await data.user.getIdToken()
+    const accessToken = await data.user.getIdToken()
     const refreshToken = data.user.refreshToken
 
     // return user data
@@ -125,7 +125,7 @@ class AuthService {
       photoUrl: data.user.photoURL,
     }
 
-    return { message: 'Login successfully', token, refreshToken, user }
+    return { message: 'Login successfully', accessToken, refreshToken, user }
   }
 }
 

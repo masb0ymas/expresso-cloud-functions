@@ -7,6 +7,8 @@ import { Request, Response } from 'express'
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import AuthService from './service'
 
+const defaultAuthFirebase = 60 * 60
+
 route.post(
   '/auth/sign-up',
   asyncHandler(async function signUp(req: Request, res: Response) {
@@ -27,7 +29,15 @@ route.post(
     const data = await AuthService.signIn(formData)
     const httpResponse = HttpResponse.get(data)
 
-    return res.status(200).json(httpResponse)
+    return res
+      .status(200)
+      .cookie('token', data.accessToken, {
+        maxAge: defaultAuthFirebase * 1000,
+        httpOnly: true,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      })
+      .json(httpResponse)
   })
 )
 
@@ -60,8 +70,11 @@ route.post(
     await signOut(auth)
 
     const message = 'You have logged out of the application'
-
     const httpResponse = HttpResponse.get({ message })
-    return res.status(200).json(httpResponse)
+
+    return res
+      .status(200)
+      .clearCookie('token', { path: '/' })
+      .json(httpResponse)
   })
 )
