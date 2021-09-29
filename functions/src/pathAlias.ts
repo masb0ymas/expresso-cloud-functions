@@ -9,7 +9,5 @@ ModuleAlias.addAliases({
   '@migration': `${__dirname}/migration`,
   '@models': `${__dirname}/models`,
   '@routes': `${__dirname}/routes`,
-  '@utils': `${__dirname}/utils`,
   '@seeds': `${__dirname}/seeds`,
-  '@views': `${__dirname}/views`,
 })

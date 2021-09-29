@@ -77,8 +77,6 @@
     "@migration/*": "dist/migration/*",
     "@models/*": "dist/models/*",
     "@routes/*": "dist/routes/*",
-    "@seeds/*": "dist/seeds/*",
-    "@utils/*": "dist/utils/*",
-    "@views/*": "dist/views/*"
+    "@seeds/*": "dist/seeds/*"
   }
 }
