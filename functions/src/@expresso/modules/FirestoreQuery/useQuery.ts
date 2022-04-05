@@ -1,35 +1,32 @@
+import { Request } from 'express'
 import * as admin from 'firebase-admin'
 import _ from 'lodash'
-import { iFilteredQueryProps } from './interface'
 import useFiltered from './useFiltered'
 import useSorted from './useSorted'
 
 async function useQuery(
-  reqQuery: iFilteredQueryProps,
+  req: Request,
   collection: admin.firestore.CollectionReference
 ): Promise<
   never[] | FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 > {
-  const page = reqQuery.page || 1
-  const pageSize = reqQuery.pageSize || 10
-  const filtered = reqQuery.filtered || []
-  const sorted = reqQuery.sorted || []
+  const reqQuery = req.getQuery()
 
-  // parse query
-  const parseSkip = parseInt(page as string)
-  const parseLimit = parseInt(pageSize as string)
-  const parseFiltered = !_.isEmpty(filtered)
-    ? JSON.parse(JSON.stringify(filtered))
-    : []
-  const parseSorted = !_.isEmpty(sorted)
-    ? JSON.parse(JSON.stringify(sorted))
-    : []
+  // query pagination
+  const page = Number(reqQuery.page) || 1
+  const pageSize = Number(reqQuery.pageSize) || 10
+
+  // query filter
+  const filtered = _.get(reqQuery, 'filtered', '[]')
+  const parseFiltered = JSON.parse(filtered)
+
+  // query sort
+  const sorted = _.get(reqQuery, 'sorted', '[]')
+  const parseSorted = JSON.parse(sorted)
 
   // skip or offset
-  let skip = (Number(parseSkip) - 1) * Number(parseLimit) || 1
-  if (Number(parseSkip) > 1) {
-    skip = Number(skip) + 1
-  }
+  let skip = (page - 1) * pageSize || 1
+  if (page > 1) skip = Number(skip) + 1
 
   // filtered query
   let queryFind = parseFiltered
@@ -49,7 +46,7 @@ async function useQuery(
   }
   const last = first.docs[first.docs.length - 1]
 
-  const ref = await queryFind.startAt(last).limit(parseLimit).get()
+  const ref = await queryFind.startAt(last).limit(pageSize).get()
   return ref
 }
 

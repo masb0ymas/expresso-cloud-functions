@@ -1,32 +1,19 @@
 import { dbAdmin } from '@config/database'
-import userSchema from '@controllers/User/schema'
+import userSchema from '@controllers/Account/User/schema'
 import useValidation from '@expresso/hooks/useValidation'
 import useFirestoreDate from '@expresso/modules/FirestoreQuery/useFirestoreDate'
-import { LoginAttributes, UserAttributes, UserCollection } from '@models/User'
+import {
+  LoginAttributes,
+  UserAttributes,
+  UserCollection,
+} from '@database/models/User'
 import * as admin from 'firebase-admin'
 import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-
-interface DtoSignUp {
-  message: string
-  data: any
-}
-
-interface DtoLogin {
-  message: string
-  accessToken: string
-  refreshToken: string
-  user: {
-    uid: string
-    fullName: any
-    role: any
-    email: string
-    photoUrl: string | null
-  }
-}
+import { DtoLogin, DtoSignUp } from './interface'
 
 class AuthService {
   private static readonly _collection = dbAdmin.collection(UserCollection)
@@ -57,8 +44,7 @@ class AuthService {
     const createUser = await createUserWithEmailAndPassword(
       auth,
       validateUser.email,
-      // @ts-expect-error
-      validateUser.confirmNewPassword
+      String(validateUser.confirmNewPassword)
     )
 
     const UserId = createUser?.user?.uid

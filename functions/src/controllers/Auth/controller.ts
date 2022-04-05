@@ -1,4 +1,5 @@
-import UserService from '@controllers/User/service'
+import { FIREBASE_EXP_TOKEN } from '@config/env'
+import UserService from '@controllers/Account/User/service'
 import asyncHandler from '@expresso/helpers/asyncHandler'
 import HttpResponse from '@expresso/modules/Response/HttpResponse'
 import Authorization from '@middlewares/Authorization'
@@ -7,17 +8,15 @@ import { Request, Response } from 'express'
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import AuthService from './service'
 
-const defaultAuthFirebase = 60 * 60
-
 route.post(
   '/auth/sign-up',
   asyncHandler(async function signUp(req: Request, res: Response) {
     const formData = req.getBody()
 
     const data = await AuthService.signUp(formData)
-    const httpResponse = HttpResponse.created(data)
 
-    return res.status(201).json(httpResponse)
+    const httpResponse = HttpResponse.created(data)
+    res.status(201).json(httpResponse)
   })
 )
 
@@ -27,12 +26,13 @@ route.post(
     const formData = req.getBody()
 
     const data = await AuthService.signIn(formData)
-    const httpResponse = HttpResponse.get(data)
 
-    return res
+    const expiredToken = Number(FIREBASE_EXP_TOKEN) * 60
+    const httpResponse = HttpResponse.get(data)
+    res
       .status(200)
       .cookie('token', data.accessToken, {
-        maxAge: defaultAuthFirebase * 1000,
+        maxAge: expiredToken * 1000,
         httpOnly: true,
         path: '/',
         secure: process.env.NODE_ENV === 'production',
@@ -57,7 +57,7 @@ route.get(
       const message = 'the login session has ended, please re-login'
 
       const httpResponse = HttpResponse.get({ message })
-      return res.status(200).json(httpResponse)
+      res.status(200).json(httpResponse)
     })
   })
 )
@@ -70,11 +70,8 @@ route.post(
     await signOut(auth)
 
     const message = 'You have logged out of the application'
-    const httpResponse = HttpResponse.get({ message })
 
-    return res
-      .status(200)
-      .clearCookie('token', { path: '/' })
-      .json(httpResponse)
+    const httpResponse = HttpResponse.get({ message })
+    res.status(200).clearCookie('token', { path: '/' }).json(httpResponse)
   })
 )

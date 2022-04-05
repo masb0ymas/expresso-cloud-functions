@@ -1,7 +1,7 @@
 import { dbAdmin } from '@config/database'
 import useFirestoreDate from '@expresso/modules/FirestoreQuery/useFirestoreDate'
 import ResponseError from '@expresso/modules/Response/ResponseError'
-import { UserCollection } from '@models/User'
+import { UserCollection } from '@database/models/User'
 
 class UserService {
   private static readonly _collection = dbAdmin.collection(UserCollection)

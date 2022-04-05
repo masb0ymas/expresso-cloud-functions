@@ -4,6 +4,6 @@ interface RoleEntity {
   updatedAt: Date
 }
 
-export type RoleAttributes = Pick<RoleEntity, 'name'>
+export type RoleAttributes = Omit<RoleEntity, 'createdAt' | 'updatedAt'>
 
 export const RoleCollection = 'roles'

@@ -32,12 +32,10 @@
       "@expresso/*": ["@expresso/*"],
       "@config/*": ["config/*"],
       "@controllers/*": ["controllers/*"],
+      "@database/*": ["database/*"],
       "@jobs/*": ["jobs/*"],
       "@middlewares/*": ["middlewares/*"],
-      "@migration/*": ["migration/*"],
-      "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
-      "@seeds/*": ["seeds/*"]
     },                                                   /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     "typeRoots": ["./src/types"],                        /* Specify multiple folders that act like `./node_modules/@types`. */

@@ -1,7 +1,9 @@
+import asyncHandler from '@expresso/helpers/asyncHandler'
+import { formatDateTime } from '@expresso/helpers/Date'
 import HttpResponse from '@expresso/modules/Response/HttpResponse'
 import ResponseError from '@expresso/modules/Response/ResponseError'
-import dotenv from 'dotenv'
 import v1Route from '@routes/v1'
+import dotenv from 'dotenv'
 import Express, { Request, Response } from 'express'
 
 dotenv.config()
@@ -20,15 +22,29 @@ route.get('/', function indexRoute(req: Request, res: Response) {
   return res.status(200).json(httpResponse)
 })
 
-route.get('/health', function (req: Request, res: Response) {
-  const data = {
-    uptime: process.uptime(),
-    message: 'Ok',
-    date: new Date(),
-  }
+route.get(
+  '/health',
+  asyncHandler(async function getServerHealth(req: Request, res: Response) {
+    const startUsage = process.cpuUsage()
 
-  res.status(200).json({ status: data })
-})
+    const status = {
+      uptime: process.uptime(),
+      status: 'Ok',
+      timezone: 'ID',
+      date: formatDateTime(new Date()),
+      node: process.version,
+      memory: process.memoryUsage,
+      platform: process.platform,
+      cpuUsage: process.cpuUsage(startUsage),
+    }
+
+    const httpResponse = HttpResponse.get({
+      message: 'Server Uptime',
+      data: status,
+    })
+    res.status(200).json(httpResponse)
+  })
+)
 
 route.get('/v1', function (req: Request, res: Response) {
   throw new ResponseError.Forbidden(

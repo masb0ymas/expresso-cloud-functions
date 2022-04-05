@@ -4,6 +4,6 @@ interface CategoryEntity {
   updatedAt: Date
 }
 
-export type CategoryAttributes = Pick<CategoryEntity, 'name'>
+export type CategoryAttributes = Omit<CategoryEntity, 'createdAt' | 'updatedAt'>
 
 export const CategoryCollection = 'categories'

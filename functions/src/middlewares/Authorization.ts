@@ -1,4 +1,5 @@
 import { currentToken } from '@expresso/helpers/Token'
+import HttpResponse from '@expresso/modules/Response/HttpResponse'
 import { NextFunction, Request, Response } from 'express'
 import * as admin from 'firebase-admin'
 import _ from 'lodash'
@@ -11,7 +12,11 @@ async function Authorization(
   const getToken = currentToken(req)
 
   if (_.isEmpty(getToken)) {
-    return res.status(401).json({ message: 'Unauthorized, token not found!' })
+    const httpResponse = HttpResponse.get({
+      code: 401,
+      message: 'Unauthorized, token not found!',
+    })
+    return res.status(401).json(httpResponse)
   }
 
   try {
@@ -23,11 +28,12 @@ async function Authorization(
     next()
   } catch (err: any) {
     if (err.code ?? err.code.startsWith('auth/')) {
-      return res.status(400).json({
-        code: 400,
+      const httpResponse = HttpResponse.get({
+        code: 401,
         message: 'the login session has ended, please re-login',
         original: err.message,
       })
+      return res.status(401).json(httpResponse)
     }
   }
 }

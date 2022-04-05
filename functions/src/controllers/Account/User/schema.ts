@@ -1,15 +1,18 @@
 import * as yup from 'yup'
 
-const createPassword = yup.object().shape({
-  newPassword: yup
-    .string()
-    .min(8, 'at least 8 characters')
-    .oneOf([yup.ref('confirmNewPassword')], 'passwords are not the same'),
-  confirmNewPassword: yup
-    .string()
-    .min(8, 'at least 8 characters')
-    .oneOf([yup.ref('newPassword')], 'passwords are not the same'),
-})
+const createPassword = yup
+  .object()
+  .shape({
+    newPassword: yup
+      .string()
+      .min(8, 'at least 8 characters')
+      .oneOf([yup.ref('confirmNewPassword')], 'passwords are not the same'),
+    confirmNewPassword: yup
+      .string()
+      .min(8, 'at least 8 characters')
+      .oneOf([yup.ref('newPassword')], 'passwords are not the same'),
+  })
+  .required()
 
 const create = yup
   .object()

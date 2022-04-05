@@ -37,7 +37,7 @@ route.post(
     const data = await RoleService.created(formData)
 
     const httpResponse = HttpResponse.created({ data })
-    return res.status(201).json(httpResponse)
+    res.status(201).json(httpResponse)
   })
 )
 
@@ -51,7 +51,7 @@ route.put(
     const data = await RoleService.updated(id, formData)
 
     const httpResponse = HttpResponse.updated({ data })
-    return res.status(200).json(httpResponse)
+    res.status(200).json(httpResponse)
   })
 )
 
@@ -64,6 +64,6 @@ route.delete(
     await RoleService.deleted(id)
 
     const httpResponse = HttpResponse.deleted({})
-    return res.status(200).json(httpResponse)
+    res.status(200).json(httpResponse)
   })
 )

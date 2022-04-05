@@ -4,7 +4,10 @@ import { DtoPaginate } from '@expresso/modules/FirestoreQuery/interface'
 import useFirestoreDate from '@expresso/modules/FirestoreQuery/useFirestoreDate'
 import useQuery from '@expresso/modules/FirestoreQuery/useQuery'
 import ResponseError from '@expresso/modules/Response/ResponseError'
-import { CategoryAttributes, CategoryCollection } from '@models/Category'
+import {
+  CategoryAttributes,
+  CategoryCollection,
+} from '@database/models/Category'
 import { Request } from 'express'
 import categorySchema from './schema'
 
@@ -17,8 +20,7 @@ class CategoryService {
    * @returns
    */
   public static async findAll(req: Request): Promise<DtoPaginate> {
-    const reqQuery = req.getQuery()
-    const ref = await useQuery(reqQuery, this._collection)
+    const ref = await useQuery(req, this._collection)
 
     const docsData: FirebaseFirestore.DocumentData = []
     ref.forEach((doc) => {

@@ -11,7 +11,6 @@ import indexRoute from '@routes/index'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import Cors from 'cors'
-import dotenv from 'dotenv'
 import Express, { Application, NextFunction, Request, Response } from 'express'
 import * as functions from 'firebase-functions'
 import { initializeApp } from 'firebase/app'
@@ -20,8 +19,6 @@ import Helmet from 'helmet'
 import hpp from 'hpp'
 import Logger from 'morgan'
 import path from 'path'
-
-dotenv.config()
 
 const pathEnv = path.resolve('.env')
 

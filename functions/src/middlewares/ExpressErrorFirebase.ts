@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import _ from 'lodash'
 
 async function ExpressErrorFirebase(
   err: any,
@@ -6,17 +7,26 @@ async function ExpressErrorFirebase(
   res: Response,
   next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> {
-  if (err.code?.startsWith('auth/')) {
-    return res.status(400).json({
-      code: 400,
-      message: err.message,
-    })
-  }
+  console.log({ err }, err.code)
 
-  if (err.code?.startsWith('messaging/')) {
-    return res.status(400).json({
-      code: 400,
-      message: err.message,
+  if (_.isString(err.code)) {
+    if (err.code?.startsWith('auth/')) {
+      return res.status(400).json({
+        code: 400,
+        message: err.message,
+      })
+    }
+
+    if (err.code?.startsWith('messaging/')) {
+      return res.status(400).json({
+        code: 400,
+        message: err.message,
+      })
+    }
+  } else {
+    return res.status(500).json({
+      code: 500,
+      message: err?.message ?? err?.details,
     })
   }
 
